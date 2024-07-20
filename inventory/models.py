@@ -24,6 +24,7 @@ class Product(models.Model):
     stock_status = models.CharField(max_length=3, choices=STOCK_STATUS, default=IN_STOCK)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
     seasonal_event = models.ForeignKey('SeasonalEvents', on_delete=models.SET_NULL, null=True, blank=True)
+    product_type = models.ManyToManyField('ProductType', related_name='products', blank=True)
 
 class ProductLine(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
@@ -33,6 +34,8 @@ class ProductLine(models.Model):
     order = models.IntegerField(default=0)
     weight = models.FloatField(default=0)
     product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, blank=True)
+    attribute_value = models.ManyToManyField('AttributeValue', related_name='attribute_value', blank=True)
+
 
 class ProductImage(models.Model):
     name = models.CharField(max_length=100)
@@ -52,3 +55,16 @@ class SeasonalEvents(models.Model):
     start_date = models.DateTimeField(unique=True)
     end_date = models.DateTimeField()
     name = models.CharField(max_length=255)
+
+class AttributeValue(models.Model):
+    attribute_value = models.CharField(max_length=255)
+    attribute = models.ForeignKey('Attribute', on_delete=models.SET_NULL, null=True, blank=True)
+
+
+class Attribute(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+class ProductType(models.Model):
+    name = models.CharField(max_length=255)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE)
