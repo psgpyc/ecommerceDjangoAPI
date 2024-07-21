@@ -26,6 +26,15 @@ class Product(models.Model):
     seasonal_event = models.ForeignKey('SeasonalEvents', on_delete=models.SET_NULL, null=True, blank=True)
     product_type = models.ManyToManyField('ProductType', related_name='products', blank=True)
 
+    class Meta:
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class ProductLine(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
     sku = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -34,7 +43,14 @@ class ProductLine(models.Model):
     order = models.IntegerField(default=0)
     weight = models.FloatField(default=0)
     product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, blank=True)
-    attribute_value = models.ManyToManyField('AttributeValue', related_name='attribute_value', blank=True)
+    attribute_value = models.ManyToManyField('AttributeValue', related_name='attributevalue', blank=True)
+
+    class Meta:
+        verbose_name = 'Product Line'
+        verbose_name_plural = 'Product Lines'
+
+    def __str__(self):
+        return self.sku
 
 
 class ProductImage(models.Model):
@@ -44,11 +60,25 @@ class ProductImage(models.Model):
     order = models.IntegerField(default=0)
     product_line = models.ForeignKey('ProductLine', on_delete=models.SET_NULL, null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Product Image'
+        verbose_name_plural = 'Product Images'
+
+    def __str__(self):
+        return self.name
+
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True)
     is_active = models.BooleanField(default=False)
     parent_category = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True) #self referencing f_key
+
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
 
 
 class SeasonalEvents(models.Model):
@@ -56,15 +86,43 @@ class SeasonalEvents(models.Model):
     end_date = models.DateTimeField()
     name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name = 'Seasonal Event'
+        verbose_name_plural = 'Seasonal Events'
+
+    def __str__(self):
+        return self.name
+
 class AttributeValue(models.Model):
     attribute_value = models.CharField(max_length=255)
     attribute = models.ForeignKey('Attribute', on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Attribute Value'
+        verbose_name_plural = 'Attribute Values'
+
+    def __str__(self):
+        return f"{self.attribute_value}-{self.attribute.name}"
 
 
 class Attribute(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Attribute'
+        verbose_name_plural = 'Attributes'
+
+    def __str__(self):
+        return self.name
+
 class ProductType(models.Model):
     name = models.CharField(max_length=255)
     parent = models.ForeignKey('self', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Product Type'
+        verbose_name_plural = 'Product Types'
+
+    def __str__(self):
+        return self.name
