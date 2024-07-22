@@ -14,11 +14,11 @@ class Product(models.Model):
         BACKORDERED: 'Back Ordered',
     }
 
-    pid = models.CharField(max_length=255)
     name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, editable=False)
     description = models.TextField(null=True, blank=True)
     is_digital = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False) #sets to current datetime when the object is created / cant be updated
     updated_at = models.DateTimeField(auto_now=True, editable=False) #updates the field to current date/time everytime the object is saved
     stock_status = models.CharField(max_length=3, choices=STOCK_STATUS, default=IN_STOCK)
@@ -118,7 +118,7 @@ class Attribute(models.Model):
 
 class ProductType(models.Model):
     name = models.CharField(max_length=255)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Product Type'

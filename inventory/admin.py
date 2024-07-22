@@ -10,8 +10,34 @@ from inventory.models import (
     AttributeValue,
     ProductType)
 
+class ProductImageInline(admin.StackedInline):
+    model = ProductImage
+    extra = 1
 
-admin.site.register(Product)
+
+class ProductLineInline(admin.StackedInline):
+    inlines = [ProductImageInline]
+    model = ProductLine
+    extra = 1
+
+
+class ProductAdmin(admin.ModelAdmin):
+    inlines = [ProductLineInline]
+    list_display = (
+        "name",
+        "category",
+        "stock_status",
+        "is_active"
+    )
+    list_filter = (
+        "stock_status",
+    )
+
+
+
+
+
+admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductLine)
 admin.site.register(ProductImage)
 admin.site.register(Category)
