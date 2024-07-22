@@ -10,13 +10,9 @@ from inventory.models import (
     AttributeValue,
     ProductType)
 
-class ProductImageInline(admin.StackedInline):
-    model = ProductImage
-    extra = 1
 
 
 class ProductLineInline(admin.StackedInline):
-    inlines = [ProductImageInline]
     model = ProductLine
     extra = 1
 

@@ -72,6 +72,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     is_active = models.BooleanField(default=False)
     parent_category = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True) #self referencing f_key
+    level = models.IntegerField()
 
     class Meta:
         verbose_name = 'Category'
