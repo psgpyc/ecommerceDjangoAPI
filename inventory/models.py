@@ -82,6 +82,7 @@ class Category(models.Model):
         return self.name
 
 
+
 class SeasonalEvents(models.Model):
     start_date = models.DateTimeField(unique=True)
     end_date = models.DateTimeField()
