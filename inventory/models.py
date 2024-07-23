@@ -24,7 +24,7 @@ class Product(models.Model):
     stock_status = models.CharField(max_length=3, choices=STOCK_STATUS, default=IN_STOCK)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
     seasonal_event = models.ForeignKey('SeasonalEvents', on_delete=models.SET_NULL, null=True, blank=True)
-    product_type = models.ManyToManyField('ProductType', related_name='products', blank=True)
+    product_type = models.ManyToManyField('ProductType', related_name='products', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Product'
@@ -72,7 +72,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     is_active = models.BooleanField(default=False)
     parent_category = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True) #self referencing f_key
-    level = models.IntegerField()
+    level = models.IntegerField(default=100)
 
     class Meta:
         verbose_name = 'Category'

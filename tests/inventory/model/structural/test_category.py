@@ -1,6 +1,6 @@
 import pytest
 from django.db import  models
-from inventory.models import Category
+from inventory.models import Category, Product, SeasonalEvents, ProductType
 # Confirm the presence of required table within in the database schema
 
 
@@ -8,6 +8,7 @@ from inventory.models import Category
 def test_model_structure_table_exists():
     try:
         from inventory.models import Category
+        from inventory.models import Product
     except ImportError:
         assert False
     else:
@@ -21,10 +22,20 @@ def test_model_structure_table_exists():
         (Category,"slug", models.SlugField),
         (Category,"is_active", models.BooleanField),
         (Category,"level", models.IntegerField),
-        (Category,"parent_category", models.ForeignKey)
+        (Category,"parent_category", models.ForeignKey),
+        (Product, "id", models.BigAutoField),
+        (Product, "name", models.CharField),
+        (Product, "slug", models.SlugField),
+        (Product, "description", models.TextField),
+        (Product, "is_digital", models.BooleanField),
+        (Product, "created_at", models.DateTimeField),
+        (Product, "updated_at", models.DateField),
+        (Product, "is_active", models.BooleanField),
+        (Product, "stock_status", models.CharField)
     ],
 ) 
 def test_model_structure_column_data_types(model, field_name, expected_type):
+    print('coming through........................................')
     assert hasattr(
         model, field_name
     ), f"{model.__name__} model does not have {field_name} field"
@@ -46,6 +57,10 @@ def test_model_structure_column_data_types(model, field_name, expected_type):
          models.SET_NULL,
          True,
          True),
+         (Product, "category", models.ForeignKey, Category, models.SET_NULL, True, True),
+         (Product, "seasonal_event", models.ForeignKey, SeasonalEvents, models.SET_NULL, True, True),
+         (Product, "product_type", models.ManyToManyField, ProductType, None, True, True)
+
     ]
 )
 def test_model_structure_relationship(model, field_name, expected_type, related_model, on_delete_behaviour, allow_null, allow_blank):
@@ -65,4 +80,96 @@ def test_model_structure_relationship(model, field_name, expected_type, related_
             field.blank == allow_blank
     )
 
+# verify nullable or not nullable filed
 
+@pytest.mark.parametrize(
+    "model, field_name, nullable_constraint", 
+    [
+        (Category, "id", False),
+        (Category, "name", False),
+        (Category, "slug", False),
+        (Category, "is_active", False),
+        (Category, "level", False),
+
+        (Product, "id", False),
+        (Product, "name", False),
+        (Product, "slug", False),
+        (Product, "description", True),
+        (Product, "is_digital", False),
+        (Product, "created_at", False),
+        (Product, "updated_at", False),
+        (Product, "is_active", False),
+        (Product, "stock_status", False),
+
+    ]
+)
+def test_model_structure_nullable_constraints(model, field_name, nullable_constraint):
+    field = model._meta.get_field(field_name)
+    assert (
+        field.null == nullable_constraint
+    )
+
+# verify default values for relevent columns
+@pytest.mark.parametrize(
+    "model, field_name, expected_default_value",
+    [
+        (Category, "is_active", False ),
+
+        
+        (Product, "is_digital", False),
+        (Product, "is_active", False),
+        
+    ]
+)
+def test_model_structure_default_values(model, field_name, expected_default_value):
+    field = model._meta.get_field(field_name)
+    filed_default_value = field.default 
+    assert (
+        filed_default_value == expected_default_value
+    ) 
+
+
+# verify column lengths 
+
+@pytest.mark.parametrize(
+    "model, field_name, expected_length",
+    [
+        (Category, "name", 255),
+        (Category, "slug", 255),
+
+        (Product, "name", 255),
+        (Product, "slug", 255),     
+        (Product, "stock_status", 3),
+    ]
+)
+def test_model_structure_column_length(model, field_name, expected_length):
+    field = model._meta.get_field(field_name)
+    assert ( field.max_length == expected_length)
+
+@pytest.mark.parametrize(
+    "model, field_name, expected_unique_constraint",
+    [
+        (Category, "name", True),
+        (Category, "slug", True),
+        (Category,  "is_active", False),
+        (Category,  "parent_category", False),
+        (Category, "level", False),
+
+        (Product, "id", True),
+        (Product, "name", True),
+        (Product, "slug", True),
+        (Product, "description", False),
+        (Product, "is_digital", False),
+        (Product, "created_at", False),
+        (Product, "updated_at", False),
+        (Product, "is_active", False),
+        (Product, "stock_status", False),
+
+        
+    ]
+)
+def test_model_structure_unique_constraint(model, field_name, expected_unique_constraint):
+    field = model._meta.get_field(field_name)
+    assert(
+        field.unique == expected_unique_constraint
+    )
