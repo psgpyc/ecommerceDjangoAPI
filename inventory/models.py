@@ -84,9 +84,9 @@ class Category(models.Model):
 
 
 class SeasonalEvents(models.Model):
-    start_date = models.DateTimeField(unique=True)
+    start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
         verbose_name = 'Seasonal Event'

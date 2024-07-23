@@ -9,6 +9,9 @@ def test_model_structure_table_exists():
     try:
         from inventory.models import Category
         from inventory.models import Product
+        from inventory.models import SeasonalEvents
+        from inventory.models import ProductType
+
     except ImportError:
         assert False
     else:
@@ -31,7 +34,13 @@ def test_model_structure_table_exists():
         (Product, "created_at", models.DateTimeField),
         (Product, "updated_at", models.DateField),
         (Product, "is_active", models.BooleanField),
-        (Product, "stock_status", models.CharField)
+        (Product, "stock_status", models.CharField),
+
+        (SeasonalEvents, "id", models.BigAutoField),
+        (SeasonalEvents, "start_date", models.DateTimeField),
+        (SeasonalEvents, "end_date", models.DateTimeField),
+        (SeasonalEvents, "name", models.CharField),
+
     ],
 ) 
 def test_model_structure_column_data_types(model, field_name, expected_type):
@@ -60,6 +69,8 @@ def test_model_structure_column_data_types(model, field_name, expected_type):
          (Product, "category", models.ForeignKey, Category, models.SET_NULL, True, True),
          (Product, "seasonal_event", models.ForeignKey, SeasonalEvents, models.SET_NULL, True, True),
          (Product, "product_type", models.ManyToManyField, ProductType, None, True, True)
+         
+        
 
     ]
 )
@@ -101,6 +112,10 @@ def test_model_structure_relationship(model, field_name, expected_type, related_
         (Product, "is_active", False),
         (Product, "stock_status", False),
 
+        (SeasonalEvents, "start_date", False),
+        (SeasonalEvents, "end_date", False),
+        (SeasonalEvents, "name", False),
+
     ]
 )
 def test_model_structure_nullable_constraints(model, field_name, nullable_constraint):
@@ -140,6 +155,9 @@ def test_model_structure_default_values(model, field_name, expected_default_valu
         (Product, "name", 255),
         (Product, "slug", 255),     
         (Product, "stock_status", 3),
+
+       
+        (SeasonalEvents, "name", 255),
     ]
 )
 def test_model_structure_column_length(model, field_name, expected_length):
@@ -164,6 +182,11 @@ def test_model_structure_column_length(model, field_name, expected_length):
         (Product, "updated_at", False),
         (Product, "is_active", False),
         (Product, "stock_status", False),
+
+        (SeasonalEvents, "id", True),
+        (SeasonalEvents, "start_date", False),
+        (SeasonalEvents, "end_date", False),
+        (SeasonalEvents, "name", True),
 
         
     ]
