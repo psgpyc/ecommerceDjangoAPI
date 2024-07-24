@@ -1,8 +1,8 @@
 import pytest
 from django.db import  models
-from inventory.models import Category, Product, SeasonalEvents, ProductType
+from inventory.models import Category, Product, SeasonalEvents, ProductType, ProductLine, AttributeValue, ProductImage, Attribute
 # Confirm the presence of required table within in the database schema
-
+print(ProductImage._meta.fields)
 
 @pytest.mark.model
 def test_model_structure_table_exists():
@@ -11,6 +11,10 @@ def test_model_structure_table_exists():
         from inventory.models import Product
         from inventory.models import SeasonalEvents
         from inventory.models import ProductType
+        from inventory.models import ProductLine
+        from inventory.models import ProductImage
+        from inventory.models import Attribute
+        from inventory.models import AttributeValue
 
     except ImportError:
         assert False
@@ -41,6 +45,26 @@ def test_model_structure_table_exists():
         (SeasonalEvents, "end_date", models.DateTimeField),
         (SeasonalEvents, "name", models.CharField),
 
+        (ProductLine, "price", models.DecimalField),
+        (ProductLine, "sku", models.UUIDField),
+        (ProductLine, "stock_qty", models.IntegerField),
+        (ProductLine, "is_active", models.BooleanField),
+        (ProductLine, "order", models.IntegerField),
+        (ProductLine, "weight", models.FloatField),
+
+        (ProductImage, "name", models.CharField),
+        (ProductImage, "alternative_text", models.CharField),
+        (ProductImage, "url", models.ImageField),
+        (ProductImage, "order", models.IntegerField),
+
+        (ProductType, "name", models.CharField),
+
+        (Attribute, "name", models.CharField),
+        (Attribute, "description", models.TextField),
+
+        (AttributeValue, "attribute_value", models.CharField)
+
+
     ],
 ) 
 def test_model_structure_column_data_types(model, field_name, expected_type):
@@ -53,6 +77,26 @@ def test_model_structure_column_data_types(model, field_name, expected_type):
     assert isinstance(
         field, expected_type
     )
+
+# Ensure the accurate number of columns per table
+@pytest.mark.parametrize(
+        "model, expected_field_count",
+        [
+            (Product, 11),
+            (ProductLine, 8),
+            (ProductImage, 6),
+            (Category, 6),
+            (SeasonalEvents, 4),
+            (AttributeValue, 3),
+            (Attribute, 3),
+            (ProductType, 3)
+
+        ]
+)
+def test_model_structure(model, expected_field_count):
+    print(model._meta.fields)
+    field_count = len(model._meta.fields) 
+    assert field_count == expected_field_count 
 
 # Ensure that column relationships are correctly defined
 
@@ -68,7 +112,18 @@ def test_model_structure_column_data_types(model, field_name, expected_type):
          True),
          (Product, "category", models.ForeignKey, Category, models.SET_NULL, True, True),
          (Product, "seasonal_event", models.ForeignKey, SeasonalEvents, models.SET_NULL, True, True),
-         (Product, "product_type", models.ManyToManyField, ProductType, None, True, True)
+         (Product, "product_type", models.ManyToManyField, ProductType, None, True, True),
+
+         (ProductLine, "product", models.ForeignKey, Product, models.SET_NULL, True, True),
+         (ProductLine, "attribute_value", models.ManyToManyField, AttributeValue, None, False, True),
+
+         (ProductImage, "product_line", models.ForeignKey, ProductLine, models.SET_NULL, True, True ),
+
+         (ProductType, "parent", models.ForeignKey, ProductType, models.CASCADE, True, True ),
+
+         (AttributeValue, "attribute", models.ForeignKey, Attribute, models.SET_NULL, True, True)
+
+
          
         
 
@@ -116,6 +171,29 @@ def test_model_structure_relationship(model, field_name, expected_type, related_
         (SeasonalEvents, "end_date", False),
         (SeasonalEvents, "name", False),
 
+        (ProductLine, "price", False),
+        (ProductLine, "sku", False),
+        (ProductLine, "stock_qty", False),
+        (ProductLine, "is_active", False),
+        (ProductLine, "order", False),
+        (ProductLine, "weight", False),
+
+        (ProductImage, "name", False),
+        (ProductImage, "alternative_text", False),
+        (ProductImage, "url", False),
+        (ProductImage, "order", False),
+
+        (ProductType, "name", False),
+
+        (Attribute, "name", False),
+        (Attribute, "description", True),
+
+        (AttributeValue, "attribute_value", False)
+
+
+
+
+
     ]
 )
 def test_model_structure_nullable_constraints(model, field_name, nullable_constraint):
@@ -133,6 +211,13 @@ def test_model_structure_nullable_constraints(model, field_name, nullable_constr
         
         (Product, "is_digital", False),
         (Product, "is_active", False),
+
+        (ProductLine, "stock_qty", 0),
+        (ProductLine, "is_active", False),
+        (ProductLine, "order", 0),
+        (ProductLine, "weight", 0),
+
+        (ProductImage, "order", 0),
         
     ]
 )
@@ -158,6 +243,16 @@ def test_model_structure_default_values(model, field_name, expected_default_valu
 
        
         (SeasonalEvents, "name", 255),
+
+        (ProductImage, "name", 100),
+        (ProductImage, "alternative_text", 100),
+
+        (ProductType, "name", 255),
+
+        (Attribute, "name", 255),
+
+        (AttributeValue, "attribute_value", 255)
+        
     ]
 )
 def test_model_structure_column_length(model, field_name, expected_length):
@@ -187,6 +282,8 @@ def test_model_structure_column_length(model, field_name, expected_length):
         (SeasonalEvents, "start_date", False),
         (SeasonalEvents, "end_date", False),
         (SeasonalEvents, "name", True),
+
+        (ProductType, "name", False)
 
         
     ]
