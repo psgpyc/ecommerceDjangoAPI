@@ -1,9 +1,9 @@
 import pytest
 from django.db import  models
 from inventory.models import Category, Product, SeasonalEvents, ProductType, ProductLine, AttributeValue, ProductImage, Attribute
-# Confirm the presence of required table within in the database schema
-print(ProductImage._meta.fields)
 
+
+# Confirm the presence of required table within in the database schema
 @pytest.mark.model
 def test_model_structure_table_exists():
     try:

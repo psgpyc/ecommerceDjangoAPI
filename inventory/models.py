@@ -13,7 +13,6 @@ class Product(models.Model):
         OUT_OF_STOCK: 'Out Of Stock',
         BACKORDERED: 'Back Ordered',
     }
-
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True, editable=False)
     description = models.TextField(null=True, blank=True)
