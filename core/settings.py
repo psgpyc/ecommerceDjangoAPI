@@ -1,4 +1,7 @@
 from pathlib import Path
+from dotenv import load_dotenv
+
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -6,6 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+
+load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-k%y$5vb8dh=mf#$m!2m4qd^+7k=^1b1a+*pgz))ug$$q^s1%!^'
@@ -25,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'inventory'
+    'inventory',
 ]
 
 MIDDLEWARE = [
@@ -66,11 +71,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": "inventory",
-            "USER": "postgres",
-            "PASSWORD": "postgres",
-            "HOST": "host.docker.internal",
-            "PORT": "5432",
+            "NAME": os.environ.get('DB_NAME'),
+            "USER": os.environ.get('DB_USER'),
+            "PASSWORD": os.environ.get('DB_PASSWORD'),
+            "HOST": os.environ.get('DB_HOST'),
+            "PORT": os.environ.get('DB_PORT'),
     }
 }
 
