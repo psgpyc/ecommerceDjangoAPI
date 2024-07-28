@@ -74,7 +74,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     is_active = models.BooleanField(default=False)
     parent_category = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True) #self referencing f_key
-    level = models.IntegerField(default=100)
+    level = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'Category'
@@ -83,8 +83,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
-
 
 class SeasonalEvents(models.Model):
     start_date = models.DateTimeField()
@@ -127,7 +125,7 @@ class Attribute(models.Model):
 class ProductType(models.Model):
     name = models.CharField(max_length=255)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
-
+    level = models.IntegerField(default=0)
     class Meta:
         verbose_name = 'Product Type'
         verbose_name_plural = 'Product Types'

@@ -69,6 +69,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
+    # "default": {},
+    # "django_db": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / 'db.sqlite3',
+    # },
     "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": os.environ.get('DB_NAME'),
@@ -76,8 +81,13 @@ DATABASES = {
             "PASSWORD": os.environ.get('DB_PASSWORD'),
             "HOST": os.environ.get('DB_HOST'),
             "PORT": os.environ.get('DB_PORT'),
-    }
+    },
 }
+
+# DATABASE_ROUTERS = [
+#     "routers.django_router.DjangoRouter",
+#     "routers.inventory_router.InventoryRouter",
+# ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {

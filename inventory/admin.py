@@ -11,8 +11,6 @@ from inventory.models import (
     ProductType
     )
 
-
-
 class ProductLineInline(admin.StackedInline):
     model = ProductLine
     extra = 1

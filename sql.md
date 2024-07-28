@@ -29,3 +29,15 @@ ALTER TABLE inventory_category
 ADD CONSTRAINT inventory_category_chk_slug_format
 CHECK (slug ~ '^[a-z0-9_-]+$' AND lower(slug) = slug);
 ```
+**Add name and level are unique constraint**
+```sql
+ALTER TABLE inventory_category
+ADD CONSTRAINT inventory_category_chk_unique_name_level
+UNIQUE (name, level);
+```
+**ADD level range constraint**
+```sql
+ALTER TABLE inventory_category
+ADD CONSTRAINT inventory_category_chk_level_range
+CHECK (level >=0 AND level <=10);
+```
