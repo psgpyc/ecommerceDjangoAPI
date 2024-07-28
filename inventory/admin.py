@@ -8,7 +8,8 @@ from inventory.models import (
     SeasonalEvents,
     Attribute,
     AttributeValue,
-    ProductType)
+    ProductType
+    )
 
 
 
@@ -28,6 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = (
         "stock_status",
     )
+
 
 
 
