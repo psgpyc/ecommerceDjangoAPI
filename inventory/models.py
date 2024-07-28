@@ -29,6 +29,7 @@ class Product(models.Model):
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
         ordering = ['name']
+        db_table = 'inventory_product'
 
     def __str__(self):
         return self.name
@@ -47,6 +48,7 @@ class ProductLine(models.Model):
     class Meta:
         verbose_name = 'Product Line'
         verbose_name_plural = 'Product Lines'
+        db_table = 'inventory_product_line'
 
     def __str__(self):
         return self.sku
@@ -62,6 +64,7 @@ class ProductImage(models.Model):
     class Meta:
         verbose_name = 'Product Image'
         verbose_name_plural = 'Product Images'
+        db_table = 'inventory_product_image'
 
     def __str__(self):
         return self.name
@@ -76,6 +79,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+        db_table = 'inventory_category'
 
     def __str__(self):
         return self.name
@@ -90,6 +94,7 @@ class SeasonalEvents(models.Model):
     class Meta:
         verbose_name = 'Seasonal Event'
         verbose_name_plural = 'Seasonal Events'
+        db_table = 'inventory_seasonal_events'
 
     def __str__(self):
         return self.name
@@ -101,6 +106,7 @@ class AttributeValue(models.Model):
     class Meta:
         verbose_name = 'Attribute Value'
         verbose_name_plural = 'Attribute Values'
+        db_table = 'inventory_attribute_value'
 
     def __str__(self):
         return f"{self.attribute_value}-{self.attribute.name}"
@@ -113,6 +119,7 @@ class Attribute(models.Model):
     class Meta:
         verbose_name = 'Attribute'
         verbose_name_plural = 'Attributes'
+        db_table = 'inventory_attribute'
 
     def __str__(self):
         return self.name
@@ -124,6 +131,7 @@ class ProductType(models.Model):
     class Meta:
         verbose_name = 'Product Type'
         verbose_name_plural = 'Product Types'
+        db_table = 'inventory_product_type'
 
     def __str__(self):
         return self.name
