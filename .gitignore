@@ -1,5 +1,5 @@
 # Created by https://www.gitignore.io
-.idea/
+legacy/.idea/
 .idea
 ### OSX ###
 .DS_Store
