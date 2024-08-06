@@ -3,6 +3,7 @@ from django.db import transaction, IntegrityError
 from inventory.models import Product, ProductInventory, Brand, ProductType, Stock
 
 def test_atomic_transaction(requests):
+
     p13inch, created = Product.objects.get_or_create(web_id="1233",
                                 slug="product-1",
                                 name="ipad pro 13 inch",
